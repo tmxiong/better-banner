@@ -7,4 +7,4 @@ react native 自动轮播图
        />
       </View>
 
-https://github.com/tmxiong/banner/blob/master/GIF.gif
+![image](https://github.com/tmxiong/banner/blob/master/GIF.gif)
