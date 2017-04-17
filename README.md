@@ -1,4 +1,4 @@
-# banner
+# react native 自动轮播图
 react native 自动轮播图
 在index.Android或index.IOS引入banner.js，并中加入如下代码，即可生成动态轮播图
      <View style={styles.container}>
