@@ -20,23 +20,10 @@ export default class BetterBanner extends PureComponent {
 
     static defaultProps = {
         bannerImages: [],
-        bannerComponents: [
-            <View style={{width: '100%', height: '100%', backgroundColor: '#1997fc',alignItems:'center',justifyContent:'center'}}>
-                <Text style={{fontSize:35,color:'#fff',marginBottom:10}}>Page 01</Text>
-                <Text style={{fontSize:15,color:'#fff'}}>Welcome! have a good time</Text>
-            </View>,
-            <View style={{width: '100%', height: '100%', backgroundColor: '#da578f',alignItems:'center',justifyContent:'center'}}>
-                <Text style={{fontSize:35,color:'#fff',marginBottom:10}}>Page 02</Text>
-                <Text style={{fontSize:15,color:'#fff'}}>Welcome! have a good time</Text>
-            </View>,
-            <View style={{width: '100%', height: '100%', backgroundColor: '#7c3fe4',alignItems:'center',justifyContent:'center'}}>
-                <Text style={{fontSize:35,color:'#fff',marginBottom:10}}>Page 03</Text>
-                <Text style={{fontSize:15,color:'#fff'}}>Welcome! have a good time</Text>
-            </View>,
-        ],
+        bannerComponents: [],
         bannerHeight: 250,
-        bannerTitles: ["Page 01 Page 01 Page 01 Page 01 Page 01 Page 01 Page 01 ", "Page 02", "Page 03"],
-        bannerTitleTextColor: "#666",
+        bannerTitles: [],
+        bannerTitleTextColor: "#fff",
         bannerTitleTextSize: 14,
         scrollInterval: 2000,
         isAutoScroll: true,
@@ -44,16 +31,19 @@ export default class BetterBanner extends PureComponent {
         adaptSeamlessScrollValue: false, // 无缝滚动显示异常时修改此值
         indicatorWidth: 10,
         indicatorHeight: 6,
-        indicatorGap: 6, // 2个指示器之间的间隙
         indicatorColor: 'rgba(255,255,255,0.6)',
+        indicatorStyle: {},
+        indicatorGap: 6, // 2个指示器之间的间隙
         activeIndicatorColor: '#fff',
         indicatorGroupPosition: "right", // left, center, right
         indicatorGroupSideOffset: 10, // 左右边距
         indicatorContainerHeight: 32,
-        indicatorContainerBackgroundColor: 'rgba(0,0,0,0.5)',
-        indicatorStyle: {},
-        onPress: () => {},
-        onScrollEnd: () => {},
+        indicatorContainerBackgroundColor: 'transparent',
+
+        onPress: () => {
+        },
+        onScrollEnd: () => {
+        },
 
     };
 
@@ -102,7 +92,7 @@ export default class BetterBanner extends PureComponent {
     }
 
     initScroll() {
-        if(!this.props.isSeamlessScroll || this.currentBannerData.length < 2) {
+        if (!this.props.isSeamlessScroll || this.currentBannerData.length < 2) {
             return;
         }
         if (this.isInitScroll) {
@@ -167,10 +157,11 @@ export default class BetterBanner extends PureComponent {
                     onPress={() => this.props.onPress(isSeamlessScroll ? i - 1 : i)}>
                     {
                         isSwitchBannerImages
-                        ?
-                        <Image style={[styles.imageStyle, {height: this.props.bannerHeight}]} source={_bannerList[i]}/>
-                        :
-                        _bannerList[i]
+                            ?
+                            <Image style={[styles.imageStyle, {height: this.props.bannerHeight}]}
+                                   source={_bannerList[i]}/>
+                            :
+                            _bannerList[i]
                     }
                 </TouchableOpacity>
             );
@@ -187,6 +178,7 @@ export default class BetterBanner extends PureComponent {
     }
 
     setBannerTitleText(y) {
+        if(this.props.bannerTitles.length === 0) return;
         this.bannerTitleContent.setNativeProps({style: {marginTop: -y}})
     }
 
@@ -240,7 +232,7 @@ export default class BetterBanner extends PureComponent {
     }
 
     startAutoScroll() {
-        if(this.currentBannerData.length < 2) {
+        if (this.currentBannerData.length < 2) {
             return;
         }
         this.scrollTimer && clearInterval(this.scrollTimer);
@@ -303,10 +295,10 @@ export default class BetterBanner extends PureComponent {
     }
 
     renderBannerTitle() {
-        let {bannerTitles, isSeamlessScroll, indicatorGroupSideOffset, indicatorContainerHeight, indicatorWidth, indicatorGap} = this.props;
+        let {bannerTitles, bannerTitleTextColor, isSeamlessScroll, indicatorGroupSideOffset, indicatorContainerHeight, indicatorWidth, indicatorGap} = this.props;
         let currentBannerTitles = JSON.parse(JSON.stringify(bannerTitles));
         let currentIndicatorWidth = this.indicatorStyle.width || indicatorWidth;
-        if(bannerTitles.length > 0) {
+        if (bannerTitles.length > 0) {
             if (isSeamlessScroll) {
                 currentBannerTitles.unshift(currentBannerTitles[currentBannerTitles.length - 1]);
                 currentBannerTitles.push(currentBannerTitles[1]);
@@ -314,7 +306,7 @@ export default class BetterBanner extends PureComponent {
             let bannerTitleView = currentBannerTitles.map((item, index) => {
                 return <Text key={index} numberOfLines={1}
                              style={[styles.bannerTitleText,
-                                 {lineHeight: indicatorContainerHeight},
+                                 {lineHeight: indicatorContainerHeight, color: bannerTitleTextColor},
                                  {width: width - indicatorGroupSideOffset * 2 - this.currentBannerData.length * (currentIndicatorWidth + indicatorGap) - 10}]}>{item}</Text>
             });
             return <View ref={ref => this.bannerTitleContent = ref}>{bannerTitleView}</View>
@@ -324,65 +316,78 @@ export default class BetterBanner extends PureComponent {
     }
 
     getIndicatorGroupPosition() {
-        const {indicatorGroupPosition} = this.props;
+        const {indicatorGroupPosition, bannerTitles} = this.props;
         let p_style = {
-            alignSelf: 'center',
+            alignSelf: 'flex-end',
         };
 
-        if (indicatorGroupPosition === "left") {
+        if(bannerTitles.length === 0) {
+            if (indicatorGroupPosition === "left") {
 
-            p_style.alignSelf = 'flex-start'
+                p_style.alignSelf = 'flex-start'
 
-        } else if (indicatorGroupPosition === "right") {
+            } else if (indicatorGroupPosition === "right") {
 
-            p_style.alignSelf = 'flex-end'
+                p_style.alignSelf = 'flex-end'
 
-        } else if (indicatorGroupPosition === "center") {
+            } else if (indicatorGroupPosition === "center") {
 
-            p_style.alignSelf = 'center'
+                p_style.alignSelf = 'center'
 
-        } else {
-            console.warn("indicatorGroupPosition value error, the value must one of 'left', 'right' or 'center'");
+            } else {
+                console.warn("indicatorGroupPosition value error, the value must one of 'left', 'right' or 'center'");
+            }
         }
+
+
         return p_style;
     }
 
     render() {
         const {bannerHeight, indicatorGroupSideOffset, indicatorContainerHeight, indicatorContainerBackgroundColor} = this.props
         return (
-            <View style={[styles.container, {height: bannerHeight}]}>
-                <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    scrollEventThrottle={70}
-                    pagingEnabled={true}
-                    onScroll={this.onScroll.bind(this)}
-                    onTouchStart={() => this.onTouchStart()}
-                    onTouchEnd={() => this.onTouchEnd()}
-                    onMomentumScrollEnd={this.onMomentumScrollEnd.bind(this)} // 滚动动画结束时调用
-                    ref={(ref) => this.scrollView = ref}
-                >
-                    {this.bannerView}
-                </ScrollView>
-                <View
-                    style={[styles.indicatorContainer, {
-                    paddingLeft: indicatorGroupSideOffset,
-                    paddingRight: indicatorGroupSideOffset,
-                        height: indicatorContainerHeight,
-                        backgroundColor: indicatorContainerBackgroundColor,
-                }]}
-                >
-                    <View style={[styles.bannerTitleContainer,{marginLeft: indicatorGroupSideOffset, height: indicatorContainerHeight}]}>
-                        {this.renderBannerTitle()}
-                    </View>
-
+            this.currentBannerData.length === 0
+                ? <View style={[styles.container,styles.noDataContainer, {height: bannerHeight}]}>
+                    <Text style={{color: '#fff',fontSize: 24,marginBottom:10}}>There is no banner data</Text>
+                    <Text style={{color: '#fff', fontSize: 14}}>Please add</Text>
+                    <Text style={{color: '#fff', fontSize: 14}}>bannerComponents or bannerImages</Text>
+                </View>
+                : <View style={[styles.container, {height: bannerHeight}]}>
+                    <ScrollView
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        scrollEventThrottle={70}
+                        pagingEnabled={true}
+                        onScroll={this.onScroll.bind(this)}
+                        onTouchStart={() => this.onTouchStart()}
+                        onTouchEnd={() => this.onTouchEnd()}
+                        onMomentumScrollEnd={this.onMomentumScrollEnd.bind(this)} // 滚动动画结束时调用
+                        ref={(ref) => this.scrollView = ref}
+                    >
+                        {this.bannerView}
+                    </ScrollView>
                     <View
-                        style={[styles.indicatorContent, this.getIndicatorGroupPosition()]}>
-                        {this.renderActiveIndicator()}
-                        {this.renderBottomIndicator()}
+                        style={[styles.indicatorContainer, {
+                            paddingLeft: indicatorGroupSideOffset,
+                            paddingRight: indicatorGroupSideOffset,
+                            height: indicatorContainerHeight,
+                            backgroundColor: indicatorContainerBackgroundColor,
+                        }]}
+                    >
+                        <View style={[styles.bannerTitleContainer, {
+                            marginLeft: indicatorGroupSideOffset,
+                            height: indicatorContainerHeight
+                        }]}>
+                            {this.renderBannerTitle()}
+                        </View>
+
+                        <View
+                            style={[styles.indicatorContent, this.getIndicatorGroupPosition()]}>
+                            {this.renderActiveIndicator()}
+                            {this.renderBottomIndicator()}
+                        </View>
                     </View>
                 </View>
-            </View>
         );
     }
 }
@@ -392,9 +397,14 @@ const styles = StyleSheet.create({
     container: {
         width: width,
     },
+    noDataContainer: {
+        backgroundColor:'#1997fc',
+        alignItems:'center',
+        justifyContent:'center'
+    },
     bannerContent: {
         width: width,
-        zIndex:9999,
+        zIndex: 9999,
     },
 
     bannerTitleContainer: {
@@ -404,7 +414,7 @@ const styles = StyleSheet.create({
 
     },
     bannerTitleText: {
-        color:'#aaa',
+        color: '#aaa',
     },
     imageStyle: {
         width: width,
@@ -416,7 +426,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: width,
         bottom: 0,
-        justifyContent:'center'
+        justifyContent: 'center'
     },
 
     indicatorContent: {
