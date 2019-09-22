@@ -1,5 +1,6 @@
 # react-native-better-banner
 一款用于`react native`的轮播图组件，支持无缝滚动、定时滚动、指示器显示、标题显示，可轮播图片或自定义组件。
+欢迎star，[项目地址与Demo：https://github.com/tmxiong/better-banner](https://github.com/tmxiong/better-banner)
 ## Installation
 ```shell
 npm install --save react-native-better-banner
@@ -20,6 +21,13 @@ import BetterBanner from 'react-native-better-banner'
 
 ![avatar](https://raw.githubusercontent.com/tmxiong/better-banner/master/src/screenshot/screenshot01.png)    
 ![avatar](https://raw.githubusercontent.com/tmxiong/better-banner/master/src/screenshot/screenshot02.png)
+
+## 涉及主要知识点
+- [x] 父子组件传值与回调
+- [x] `ref`
+- [x] `setNativeProps`
+- [x] ` onLayout`
+
 ## Props
 
 props | type | default | note
@@ -157,3 +165,5 @@ const styles = StyleSheet.create({
 export default App;
 
 ```
+
+欢迎star，[项目地址与Demo：https://github.com/tmxiong/better-banner](https://github.com/tmxiong/better-banner)
