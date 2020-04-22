@@ -91,6 +91,11 @@ export default class BetterBanner extends PureComponent {
         this.startAutoScroll();
     }
 
+    componentWillUnmount() {
+        this.scrollTimer && clearInterval(this.scrollTimer);
+        this.animTimer && clearTimeout(this.animTimer);
+    }
+
     initScroll() {
         if (!this.props.isSeamlessScroll || this.currentBannerData.length < 2) {
             return;
@@ -439,5 +444,3 @@ const styles = StyleSheet.create({
         position: 'absolute',
     },
 });
-
-module.exports = BetterBanner;
