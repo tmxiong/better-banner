@@ -1,6 +1,10 @@
 # react-native-better-banner
 一款用于`react native`的轮播图组件，支持无缝滚动、定时滚动、指示器显示、标题显示，可轮播图片或自定义组件。
 欢迎star，[项目地址与Demo：https://github.com/tmxiong/better-banner](https://github.com/tmxiong/better-banner)
+
+## What's New
+* `1.1.3` 修复报错问题`TypeError:null is not an object(evaluating'this.scrollView.scrollTo')`
+
 ## Installation
 ```shell
 npm install --save react-native-better-banner
